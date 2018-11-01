@@ -1,0 +1,10 @@
+de\mcruben\cloudnet\webinterface\command\CommandWiSetup.class
+de\mcruben\cloudnet\webinterface\objects\AdvancedWrapperInfo.class
+de\mcruben\cloudnet\webinterface\WebInterface$2.class
+de\mcruben\cloudnet\webinterface\ConfigManager.class
+de\mcruben\cloudnet\webinterface\WebInterface.class
+de\mcruben\cloudnet\webinterface\setup\WiSetup.class
+de\mcruben\cloudnet\webinterface\webhandler\RestAPIHandler.class
+de\mcruben\cloudnet\webinterface\command\CommandWiUpdate.class
+de\mcruben\cloudnet\webinterface\command\CommandWiVersion.class
+de\mcruben\cloudnet\webinterface\WebInterface$1.class
