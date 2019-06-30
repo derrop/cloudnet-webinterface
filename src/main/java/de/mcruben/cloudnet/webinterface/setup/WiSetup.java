@@ -130,7 +130,7 @@ public class WiSetup extends Setup {
                 .setupCancel(() -> System.out.println("Du hast das Setup abgebrochen"))
 
                 .request(new SetupRequest("name", "Wie lautet der Name des Webinterfaces? (Dieser wird auf dem Webinterface als Header angezeigt)", "", SetupResponseType.STRING, s -> true))
-                .request(new SetupRequest("domain", "Wie lautet die genaue Domain zu dem Webinterface? (falls dein Webinterface in einem Unterordner auf deinem Webserver liegen soll, muss dieser mit angegeben werden)", "", SetupResponseType.STRING, s -> true))
+                .request(new SetupRequest("domain", "Wie lautet die genaue URL zu dem Webinterface? (falls dein Webinterface in einem Unterordner auf deinem Webserver liegen soll, muss dieser mit angegeben werden)", "", SetupResponseType.STRING, s -> true))
                 .request(new SetupRequest("username", "Wie lautet der Name deines ersten Accounts?", "Dieser User existiert bereits", SetupResponseType.STRING, s -> CloudNet.getInstance().getUser(s) == null))
                 .request(new SetupRequest("password", "Wie lautet das Passwort deines ersten Accounts?", "", SetupResponseType.STRING, s -> true))
                 //.request(new SetupRequest("time", "Nach wie vielen Sekunden soll man automatisch ausgeloggt werden?", "Deine Eingabe muss eine Zahl sein", SetupResponseType.NUMBER, s -> true))
