@@ -252,6 +252,14 @@ public class RestAPIHandler extends WebHandler {
             }
             break;
 
+            case "coreloghaste":
+            {
+                if (!user.hasPermission("web.console"))
+                    return noPermission(httpRequest);
+                responseDocument.append("success", true).append("log", WebInterface.getInstance().getCorelog().toString().replace("<p>", "").replace("</p>", "\n"));
+            }
+            break;
+
             case "createlog":
             {
 
@@ -576,6 +584,27 @@ public class RestAPIHandler extends WebHandler {
             }
             break;
 
+            case "changeusername":
+            {
+                if (!user.hasPermission("web.edituser"))
+                    return noPermission(httpRequest);
+                User user1 = CloudNet.getInstance().getUser(value);
+                if (user1 == null) {
+                    responseDocument.append("reason", "The User was not found");
+                    break;
+                }
+
+                CloudNet.getInstance().getUsers().remove(user1);
+
+                user1 = new User(httpRequest.headers().get("-Xuser"), user1.getUniqueId(), user1.getApiToken(), user1.getHashedPassword(), user1.getPermissions(), user1.getMetaData());
+
+                CloudNet.getInstance().getUsers().add(user1);
+                CloudNet.getInstance().getConfig().save(CloudNet.getInstance().getUsers());
+
+                responseDocument.append("success", true);
+            }
+            break;
+
             case "deleteuser":
             {
                 if (!user.hasPermission("web.deleteuser"))
@@ -612,7 +641,7 @@ public class RestAPIHandler extends WebHandler {
             }
             break;
 
-            /*case "permission":
+            case "permission":
             {
                 User user1 = CloudNet.getInstance().getUser(value);
                 if (user1 == null) {
@@ -622,7 +651,7 @@ public class RestAPIHandler extends WebHandler {
 
                 responseDocument.append("success", true).append("response", user1.hasPermission(httpRequest.headers().get("-Xpermission")));
             }
-            break;*/
+            break;
 
             case "playerbyname":
             {
@@ -696,6 +725,34 @@ public class RestAPIHandler extends WebHandler {
 
                 wrapper.writeCommand("stop");
                 responseDocument.append("success", true);
+            }
+            break;
+
+            case "shutdownwrappers":
+            {
+                for (Wrapper wrapper : CloudNet.getInstance().getWrappers().values()) {
+                    wrapper.writeCommand("stop");
+                }
+            }
+            break;
+
+            case "shutdownservers":
+            {
+                for (Wrapper wrapper : CloudNet.getInstance().getWrappers().values()) {
+                    for (MinecraftServer minecraftServer : wrapper.getServers().values()) {
+                        wrapper.stopServer(minecraftServer);
+                    }
+                }
+            }
+            break;
+
+            case "shutdownproxys":
+            {
+                for (Wrapper wrapper : CloudNet.getInstance().getWrappers().values()) {
+                    for (ProxyServer proxyServer : wrapper.getProxys().values()) {
+                        wrapper.stopProxy(proxyServer);
+                    }
+                }
             }
             break;
 

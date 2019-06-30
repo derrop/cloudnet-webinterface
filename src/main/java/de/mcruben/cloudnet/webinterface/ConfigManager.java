@@ -29,7 +29,6 @@ public class ConfigManager {
     void loadConfigs() {
         try (InputStream inputStream = WebInterface.getInstance().getClassLoader().getResourceAsStream("configs/configs.yml")) {
             Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(inputStream);
-            inputStream.close();
             Collection<String> configs = configuration.getStringList("configs");
             for (String name : configs) {
                 loadConfig(name);

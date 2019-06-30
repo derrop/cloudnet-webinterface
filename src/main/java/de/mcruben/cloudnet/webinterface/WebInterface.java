@@ -20,6 +20,7 @@ import de.mcruben.cloudnet.webinterface.command.CommandWiUpdate;
 import de.mcruben.cloudnet.webinterface.command.CommandWiVersion;
 import de.mcruben.cloudnet.webinterface.setup.WiSetup;
 import de.mcruben.cloudnet.webinterface.webhandler.RestAPIHandler;
+import io.netty.util.internal.PlatformDependent;
 import lombok.Getter;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -111,7 +112,7 @@ public class WebInterface extends CoreModule {
     }
 
     public boolean checkUpdates() {
-        Document document = loadWebsite("https://nevercold.eu/webinterface/version.json");
+        Document document = loadWebsite("https://spigot.nevercold.eu/cloudnet/webinterface/version.json");
 
         if (!document.contains("response")) {
             System.out.println("[WebInterface] There was an error while parsing the version, please report this in the support");
@@ -120,11 +121,11 @@ public class WebInterface extends CoreModule {
 
         Document response = new Document(document.get("response").getAsJsonObject());
 
-        String newestVersion = response.getString("version");                                                                   //Get the newest version
-        String devVersion = response.getString("devversion");                                                                   //Get the dev version
-        Collection<String> oldVersions = response.getObject("oldversion", new TypeToken<Collection<String>>() {        //Get all old versions
+        String newestVersion = response.getString("version");
+        String devVersion = response.getString("devversion");
+        Collection<String> oldVersions = response.getObject("oldversion", new TypeToken<Collection<String>>() {
         }.getType());
-        String currentVersion = getModuleConfig().getVersion();                                                                     //Get the version of the installed module
+        String currentVersion = getModuleConfig().getVersion();
 
         if (newestVersion.equals(currentVersion)) {
             System.out.println("[WebInterface] You are using the newest version of the Webinterface");
@@ -132,7 +133,7 @@ public class WebInterface extends CoreModule {
         }
 
         if (devVersion.equals(currentVersion)) {
-            System.out.println("[WebInterface] You are using the newest dev version of the Webinterface");
+            System.out.println("[WebInterface] You are using the current dev version of the Webinterface");
             return true;
         }
 
@@ -148,7 +149,7 @@ public class WebInterface extends CoreModule {
     }
 
     public Return<MultiValue<String, String>, Boolean> checkUpdatesSilent() {
-        Document document = loadWebsite("https://nevercold.eu/webinterface/version.json");
+        Document document = loadWebsite("https://spigot.nevercold.eu/cloudnet/webinterface/version.json");
 
         if (!document.contains("response")) {
             System.out.println("[WebInterface] There was an error while parsing the version");
@@ -157,16 +158,20 @@ public class WebInterface extends CoreModule {
 
         Document response = new Document(document.get("response").getAsJsonObject());
 
-        String newestVersion = response.getString("version");                                                                   //Get the newest version
-        String devVersion = response.getString("devversion");                                                                   //Get the dev version
-        String currentVersion = getModuleConfig().getVersion();                                                                     //Get the version of the installed module
+        String newestVersion = response.getString("version");
+        String devVersion = response.getString("devversion");
+        Collection<String> oldVersions = response.getObject("oldversion", new TypeToken<Collection<String>>() {
+        }.getType());
+        String currentVersion = getModuleConfig().getVersion();
 
-        if (newestVersion.equals(currentVersion)) {
+        if (newestVersion.equals(currentVersion) || devVersion.equals(currentVersion)) {
+
             return new Return<>(null, true);
         }
 
-        if (devVersion.equals(currentVersion)) {
-            return new Return<>(null, true);
+        if (oldVersions.contains(currentVersion)) {
+            System.out.println("Your're using an old version, you WON'T GET ANY SUPPORT if you don't update");
+            return new Return<>(new MultiValue<>(response.getString("versiondlzip"), response.getString("versiondljar")), false);
         }
 
         return new Return<>(new MultiValue<>(response.getString("versiondlzip"), response.getString("versiondljar")), false);
@@ -194,6 +199,8 @@ public class WebInterface extends CoreModule {
     }
 
     public void update(Return<MultiValue<String, String>, Boolean> response) {
+        System.out.println("Updating the webinterface...");
+
         {
             File file = new File("Website");
             if (!file.exists()) {
@@ -241,6 +248,10 @@ public class WebInterface extends CoreModule {
             }
 
             {
+                if (PlatformDependent.isWindows()) {
+                    System.err.println("[WebInterface] CANNOT UPDATE THE JAR, YOU ARE ON WINDOWS");
+                    return;
+                }
                 try {
                     HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(response.getFirst().getSecond())).openConnection();
                     httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");

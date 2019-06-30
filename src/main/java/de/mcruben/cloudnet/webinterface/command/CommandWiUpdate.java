@@ -16,6 +16,7 @@ import de.mcruben.cloudnet.webinterface.WebInterface;
 public class CommandWiUpdate extends Command {
     public CommandWiUpdate() {
         super("wiupdate", "cloudnet.webinterface.command.update");
+        description = "updates the web interface (by Niekold and McRupen)";
     }
 
     @Override

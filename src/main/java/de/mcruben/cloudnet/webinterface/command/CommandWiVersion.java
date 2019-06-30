@@ -14,6 +14,7 @@ import de.mcruben.cloudnet.webinterface.WebInterface;
 public class CommandWiVersion extends Command {
     public CommandWiVersion() {
         super("wiversion", "cloudnet.webinterface.command.version");
+        description = "prints the version of your web interface (by Niekold and McRupen)";
     }
 
     @Override

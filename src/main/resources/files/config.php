@@ -80,7 +80,7 @@ $expiretime = 600;
 $dir = "cloudnet/webinterface/api/v2";
 $dircn = "cloudnet/api/v1/util";
 %version%
-$versioncheck = "https://nevercold.eu/webinterface/version.json";
+$versioncheck = "https://spigot.nevercold.eu/cloudnet/webinterface/version.json";
 $debug = 0;
 
 
