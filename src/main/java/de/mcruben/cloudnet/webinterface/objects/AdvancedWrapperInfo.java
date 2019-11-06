@@ -16,7 +16,7 @@ public class AdvancedWrapperInfo extends WrapperInfo {
     private int usedMemory;
 
     public AdvancedWrapperInfo(double cpuUsage, int usedMemory, WrapperInfo wrapperInfo) {
-        super(wrapperInfo.getServerId(), wrapperInfo.getHostName(), wrapperInfo.isReady(), wrapperInfo.getAvailableProcessors(), wrapperInfo.getStartPort(), wrapperInfo.getProcess_queue_size(), wrapperInfo.getMemory());
+        super(wrapperInfo.getServerId(), wrapperInfo.getHostName(), wrapperInfo.getVersion(), wrapperInfo.isReady(), wrapperInfo.getAvailableProcessors(), wrapperInfo.getStartPort(), wrapperInfo.getProcess_queue_size(), wrapperInfo.getMemory());
         this.cpuUsage = cpuUsage;
         this.usedMemory = usedMemory;
     }
